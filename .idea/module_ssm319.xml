@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_ssm319" default="compile.module.ssm319">
+  <dirname property="module.ssm319.basedir" file="${ant.file.module_ssm319}"/>
+  
+  <property name="module.jdk.home.ssm319" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ssm319" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ssm319" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ssm319" value="-encoding UTF-8 -source 7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="ssm319.output.dir" value="${module.ssm319.basedir}/../target/classes"/>
+  <property name="ssm319.testoutput.dir" value="${module.ssm319.basedir}/../target/test-classes"/>
+  
+  <path id="ssm319.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ssm319.module.production.classpath">
+    <path refid="${module.jdk.classpath.ssm319}"/>
+  </path>
+  
+  <path id="ssm319.runtime.production.module.classpath">
+    <pathelement location="${ssm319.output.dir}"/>
+  </path>
+  
+  <path id="ssm319.module.classpath">
+    <path refid="${module.jdk.classpath.ssm319}"/>
+    <pathelement location="${ssm319.output.dir}"/>
+  </path>
+  
+  <path id="ssm319.runtime.module.classpath">
+    <pathelement location="${ssm319.testoutput.dir}"/>
+    <pathelement location="${ssm319.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.ssm319">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ssm319">
+    <patternset refid="excluded.from.module.ssm319"/>
+  </patternset>
+  
+  <path id="ssm319.module.sourcepath">
+    <dirset dir="${module.ssm319.basedir}/../../ssm319">
+      <include name="src/main/java"/>
+    </dirset>
+  </path>
+  
+  <path id="ssm319.module.test.sourcepath">
+    <dirset dir="${module.ssm319.basedir}/../../ssm319">
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ssm319" depends="compile.module.ssm319.production,compile.module.ssm319.tests" description="Compile module ssm319"/>
+  
+  <target name="compile.module.ssm319.production" depends="register.custom.compilers" description="Compile module ssm319; production classes">
+    <mkdir dir="${ssm319.output.dir}"/>
+    <javac2 destdir="${ssm319.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ssm319}/javac">
+      <compilerarg line="${compiler.args.ssm319}"/>
+      <bootclasspath refid="ssm319.module.bootclasspath"/>
+      <classpath refid="ssm319.module.production.classpath"/>
+      <src refid="ssm319.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ssm319"/>
+    </javac2>
+    
+    <copy todir="${ssm319.output.dir}">
+      <fileset dir="${module.ssm319.basedir}/../src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.ssm319.tests" depends="register.custom.compilers,compile.module.ssm319.production" description="compile module ssm319; test classes" unless="skip.tests">
+    <mkdir dir="${ssm319.testoutput.dir}"/>
+    <javac2 destdir="${ssm319.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ssm319}/javac">
+      <compilerarg line="${compiler.args.ssm319}"/>
+      <bootclasspath refid="ssm319.module.bootclasspath"/>
+      <classpath refid="ssm319.module.classpath"/>
+      <src refid="ssm319.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ssm319"/>
+    </javac2>
+    
+    <copy todir="${ssm319.testoutput.dir}">
+      <fileset dir="${module.ssm319.basedir}/../src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.ssm319" description="cleanup module">
+    <delete dir="${ssm319.output.dir}"/>
+    <delete dir="${ssm319.testoutput.dir}"/>
+  </target>
+</project>

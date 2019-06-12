@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="module_ssm_maven" default="compile.module.ssm_maven">
+  <dirname property="module.ssm_maven.basedir" file="${ant.file.module_ssm_maven}"/>
+  
+  <property name="module.jdk.home.ssm_maven" value="${project.jdk.home}"/>
+  <property name="module.jdk.bin.ssm_maven" value="${project.jdk.bin}"/>
+  <property name="module.jdk.classpath.ssm_maven" value="${project.jdk.classpath}"/>
+  
+  <property name="compiler.args.ssm_maven" value="-encoding UTF-8 -source 7 -target 1.7 ${compiler.args}"/>
+  
+  <property name="ssm_maven.output.dir" value="${module.ssm_maven.basedir}/target/classes"/>
+  <property name="ssm_maven.testoutput.dir" value="${module.ssm_maven.basedir}/target/test-classes"/>
+  
+  <path id="ssm_maven.module.bootclasspath">
+    <!-- Paths to be included in compilation bootclasspath -->
+  </path>
+  
+  <path id="ssm_maven.module.production.classpath">
+    <path refid="${module.jdk.classpath.ssm_maven}"/>
+  </path>
+  
+  <path id="ssm_maven.runtime.production.module.classpath">
+    <pathelement location="${ssm_maven.output.dir}"/>
+  </path>
+  
+  <path id="ssm_maven.module.classpath">
+    <path refid="${module.jdk.classpath.ssm_maven}"/>
+    <pathelement location="${ssm_maven.output.dir}"/>
+  </path>
+  
+  <path id="ssm_maven.runtime.module.classpath">
+    <pathelement location="${ssm_maven.testoutput.dir}"/>
+    <pathelement location="${ssm_maven.output.dir}"/>
+  </path>
+  
+  
+  <patternset id="excluded.from.module.ssm_maven">
+    <patternset refid="ignored.files"/>
+  </patternset>
+  
+  <patternset id="excluded.from.compilation.ssm_maven">
+    <patternset refid="excluded.from.module.ssm_maven"/>
+  </patternset>
+  
+  <path id="ssm_maven.module.sourcepath">
+    <dirset dir="${module.ssm_maven.basedir}">
+      <include name="src/main/java"/>
+    </dirset>
+  </path>
+  
+  <path id="ssm_maven.module.test.sourcepath">
+    <dirset dir="${module.ssm_maven.basedir}">
+      <include name="src/test/java"/>
+    </dirset>
+  </path>
+  
+  
+  <target name="compile.module.ssm_maven" depends="compile.module.ssm_maven.production,compile.module.ssm_maven.tests" description="Compile module ssm_maven"/>
+  
+  <target name="compile.module.ssm_maven.production" depends="register.custom.compilers" description="Compile module ssm_maven; production classes">
+    <mkdir dir="${ssm_maven.output.dir}"/>
+    <javac2 destdir="${ssm_maven.output.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ssm_maven}/javac">
+      <compilerarg line="${compiler.args.ssm_maven}"/>
+      <bootclasspath refid="ssm_maven.module.bootclasspath"/>
+      <classpath refid="ssm_maven.module.production.classpath"/>
+      <src refid="ssm_maven.module.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ssm_maven"/>
+    </javac2>
+    
+    <copy todir="${ssm_maven.output.dir}">
+      <fileset dir="${module.ssm_maven.basedir}/src/main/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="compile.module.ssm_maven.tests" depends="register.custom.compilers,compile.module.ssm_maven.production" description="compile module ssm_maven; test classes" unless="skip.tests">
+    <mkdir dir="${ssm_maven.testoutput.dir}"/>
+    <javac2 destdir="${ssm_maven.testoutput.dir}" debug="${compiler.debug}" nowarn="${compiler.generate.no.warnings}" memorymaximumsize="${compiler.max.memory}" fork="true" executable="${module.jdk.bin.ssm_maven}/javac">
+      <compilerarg line="${compiler.args.ssm_maven}"/>
+      <bootclasspath refid="ssm_maven.module.bootclasspath"/>
+      <classpath refid="ssm_maven.module.classpath"/>
+      <src refid="ssm_maven.module.test.sourcepath"/>
+      <patternset refid="excluded.from.compilation.ssm_maven"/>
+    </javac2>
+    
+    <copy todir="${ssm_maven.testoutput.dir}">
+      <fileset dir="${module.ssm_maven.basedir}/src/test/java">
+        <patternset refid="compiler.resources"/>
+        <type type="file"/>
+      </fileset>
+    </copy>
+  </target>
+  
+  <target name="clean.module.ssm_maven" description="cleanup module">
+    <delete dir="${ssm_maven.output.dir}"/>
+    <delete dir="${ssm_maven.testoutput.dir}"/>
+  </target>
+</project>
