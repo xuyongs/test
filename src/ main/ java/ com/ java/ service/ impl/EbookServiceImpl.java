@@ -36,6 +36,7 @@ private EbookMapper ebookMapper;
     public boolean saveEbookEntry(EbookEntry record) {
         return ebookMapper.insertEbookEntry(record)>=1;
     }*/
+//...................
 }
 
 
